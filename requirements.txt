@@ -1,6 +1,6 @@
 numpy
+scipy
 scikit-image
-matplotlib
 tqdm
 networkx
 tifffile

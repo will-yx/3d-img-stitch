@@ -7,7 +7,6 @@ from skimage.transform import rescale
 import networkx as nx
 from scipy.optimize import least_squares
 from tifffile import imread, imwrite
-import matplotlib.pyplot as plt
 
 from skimage.registration import phase_cross_correlation
 def estimate_translation(fixed_np, moving_np):
