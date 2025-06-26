@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: 3dstitch
+Version: 0.0.1
+Summary: Gridwise stitching of 3D images - confocal, lightsheet microscopy
+Home-page: https://github.com/will-yx/3d-img-stitch/
+Author: Yu Xin (Will) Wang
+Author-email: wwang@sbodiscovery.org
+Classifier: Programming Language :: Python :: 3.9
+Classifier: License :: MIT License
+Description-Content-Type: image processing
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: scikit-image
+Requires-Dist: tqdm
+Requires-Dist: networkx
+Requires-Dist: tifffile
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary

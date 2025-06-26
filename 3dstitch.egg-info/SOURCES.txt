@@ -1,0 +1,8 @@
+LICENSE
+README.md
+setup.py
+3dstitch.egg-info/PKG-INFO
+3dstitch.egg-info/SOURCES.txt
+3dstitch.egg-info/dependency_links.txt
+3dstitch.egg-info/requires.txt
+3dstitch.egg-info/top_level.txt

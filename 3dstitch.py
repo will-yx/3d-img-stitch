@@ -1,4 +1,4 @@
-import os, sys, glob, tqdm, gc
+import os, sys, glob, tqdm, gc, textwrap
 import numpy as np
 from skimage import io, registration, util
 from skimage.restoration import rolling_ball
@@ -13,7 +13,7 @@ def estimate_translation(fixed_np, moving_np):
     shift, _, _ = phase_cross_correlation(fixed_np, moving_np, upsample_factor=1)
     return shift  # Convert z,y,x to x,y,z
 
-def register_tiles(ROWS,COLS,OVERLAP,ref_channel):
+def register_tiles(img_files, ROWS,COLS,OVERLAP,ref_channel):
     shifts = {}
     sizes = None
     for r in range(ROWS):
@@ -132,17 +132,19 @@ def resample_to_canvas(global_positions, volume_shape, ch, ROWS, COLS, scale=Fal
     crop_min = np.array([zmin, ymin, xmin]).astype(int)
     crop_max = np.array([zmax, ymax, xmax]).astype(int)
     
-    return canvas[crop_min[0]:crop_max[0]
+    return canvas[crop_min[0]:crop_max[0]]
 
-def run_stitching(indir, batch=False, overlap=0.1, n_ch=3, ref_channel=0, ds=[1,1,1]):
-    if batch = False:
+def run_stitching(indir, batch=False, OVERLAP=0.1, n_ch=3, ref_channel=0, ds=[1,1,1]):
+    if batch == False:
         img_dirs = [indir]
     else:
+        print(indir)
         img_dirs = glob.glob(indir+'/*')
         print(f"found {len(img_dirs)} directories") 
     for img_dir in img_dirs:
         #get image files
-        img_files=sorted(glob.glob(img_dir+f'/*]_C{use_ch:02d}.ome.tif'))
+        print(ref_channel)
+        img_files=sorted(glob.glob(f'{img_dir}/*]_C{int(ref_channel):02d}.ome.tif'))
         
         #get shape of tiles ###likely to break... use better heuristics
         ROWS = int(img_files[-1][-20:-18])+1
@@ -152,7 +154,7 @@ def run_stitching(indir, batch=False, overlap=0.1, n_ch=3, ref_channel=0, ds=[1,
         assert len(img_files) == ROWS*COLS, 'Wrong number of ome.tif files found!'
         
         print("Registering tile pairs...")
-        shifts, sizes = register_tiles(ROWS,COLS,OVERLAP,ref_channel)
+        shifts, sizes = register_tiles(img_files, ROWS,COLS,OVERLAP,ref_channel)
         print("Optimizing tile layout...")
         global_positions = optimize_positions(shifts)
         
@@ -196,7 +198,7 @@ if __name__ == '__main__':
             use -b option for batch processing any number of image folders
         '''))
         
-  parser.add_argument("-i", "--indir", nargs=1, help = "Input directory")
+  parser.add_argument("-i", "--indir", help = "Input directory")
   parser.add_argument("-b", "--batch", help = "Batch process a directory of image directories", default = False)
   parser.add_argument("-o", "--overlap", help = "Amount of tile-tile overlap", default = 0.1)
   parser.add_argument("-ch", "--channels", help = "Number of channels", default = 1)
@@ -205,4 +207,4 @@ if __name__ == '__main__':
   
   args = parser.parse_args()
   
-  run_stitching(args.indir, batch=args.batch, overlap=args.overlap, n_ch=args.channels, ref_channel=args.ref_channel, ds=args.downsample)
+  run_stitching(args.indir, batch=args.batch, OVERLAP=args.overlap, n_ch=args.channels, ref_channel=args.ref_channel, ds=args.downsample)
