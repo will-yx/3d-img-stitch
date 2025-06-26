@@ -1,5 +1,5 @@
 import os, sys, glob, tqdm, gc
-import numpy as np, pandas as pd, SimpleITK as sitk
+import numpy as np
 from skimage import io, registration, util
 from skimage.restoration import rolling_ball
 from skimage.transform import rescale
