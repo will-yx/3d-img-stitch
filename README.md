@@ -1,10 +1,10 @@
-##**Gridwise stitching of 3D images**
+##Gridwise stitching of 3D images
 --------------------------------
 1 - Overlap-aware tile registration
 2 - Global optimization of image location
 3 - On-the-fly downsample and stitching
 
-###Installation
+**Installation**
 	git clone the package
 	navigate to the parent directory
 	create a virtual python 3.9 environment with conda or mamba
@@ -14,11 +14,11 @@
 	install the package
 		`pip install -e 3d-img-stitch`
 
-###Usage
+**Usage**
 	in the 3d-img-stitch directory
 		`python 3dstitch.py -i "input directory" -b True -o 0.1 -ch 3 -r 0 -ds 1 0.5 0.5`
 		
-###Parameters
+**Parameters**
 		`--indir` or `-i` **str** : input directory (folder containing the images; or for batch processing, a folder of folders)
 		`--batch` or `-b` **bool** : True/False for batch processing; if True will look for subfolders that contain images and iterate through stitching each image set
 		`--overlap` or `-o` **float** : fraction of the x, y dimensions that overlaps with adjascent tiles
