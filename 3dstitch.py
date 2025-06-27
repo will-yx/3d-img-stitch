@@ -115,7 +115,7 @@ def resample_to_canvas(img_files, global_positions, volume_shape, ch, ROWS, COLS
     for s, pos in shifts.items():
         s_[s] = pos[0]
     zmin=np.max(s_)
-    zmax=np.min(s_)+sizes[0]
+    zmax=np.min(s_)+volume_shape[0]
     
     s_ = np.zeros((ROWS, COLS))
     for s, pos in shifts.items():
