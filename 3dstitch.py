@@ -80,7 +80,7 @@ def optimize_positions(shifts):
     global_positions = {tile: final_pos[tile_indices[tile]] for tile in tile_indices}
     return global_positions
 
-def resample_to_canvas(global_positions, volume_shape, ch, ROWS, COLS, scale=False, ds=None, bksub=False):
+def resample_to_canvas(img_files, global_positions, volume_shape, ch, ROWS, COLS, scale=False, ds=None, bksub=False):
     ds = np.array(ds)
     output_shape = np.array([0, 0, 0])
     min_coords = np.array([np.inf, np.inf, np.inf])
@@ -143,8 +143,7 @@ def run_stitching(indir, batch=False, OVERLAP=0.1, n_ch=3, ref_channel=0, ds=[1,
         print(f"found {len(img_dirs)} directories") 
     for img_dir in img_dirs:
         #get image files
-        print(ref_channel)
-        img_files=sorted(glob.glob(f'{img_dir}/*]_C{int(ref_channel):02d}.ome.tif'))
+        img_files=sorted(glob.glob(f'{img_dir}/*]_C{ref_channel:02d}.ome.tif'))
         
         #get shape of tiles ###likely to break... use better heuristics
         ROWS = int(img_files[-1][-20:-18])+1
@@ -165,7 +164,7 @@ def run_stitching(indir, batch=False, OVERLAP=0.1, n_ch=3, ref_channel=0, ds=[1,
         
         for z in range(n_ch):
             print(f'Stitching CH{z}...')
-            stitched = resample_to_canvas(global_positions, sizes, z, scale=True, ds=ds, bksub=None)
+            stitched = resample_to_canvas(img_files, global_positions, sizes, z, ROWS, COLS, scale=True, ds=ds, bksub=False)
             
             #save stitched file
             print('Saving image file...')
@@ -199,12 +198,13 @@ if __name__ == '__main__':
         '''))
         
   parser.add_argument("-i", "--indir", help = "Input directory")
-  parser.add_argument("-b", "--batch", help = "Batch process a directory of image directories", default = False)
-  parser.add_argument("-o", "--overlap", help = "Amount of tile-tile overlap", default = 0.1)
-  parser.add_argument("-ch", "--channels", help = "Number of channels", default = 1)
-  parser.add_argument("-r", "--ref_channel", help = "Reference channel for alignment", default = 0)
-  parser.add_argument("-ds", "--downsample", nargs=3, help = "Ratio of downsample in z y x", default = [1,1,1])
+  parser.add_argument("-b", "--batch", type=bool, help = "Batch process a directory of image directories", default = False)
+  parser.add_argument("-o", "--overlap", type=float, help = "Amount of tile-tile overlap", default = 0.1)
+  parser.add_argument("-ch", "--channels", type=int, help = "Number of channels", default = 1)
+  parser.add_argument("-r", "--ref_channel", type=int, help = "Reference channel for alignment", default = 0)
+  parser.add_argument("-ds", "--downsample", nargs=3, type=float, help = "Ratio of downsample in z y x", default = [1,1,1])
   
   args = parser.parse_args()
+  print(args)
   
   run_stitching(args.indir, batch=args.batch, OVERLAP=args.overlap, n_ch=args.channels, ref_channel=args.ref_channel, ds=args.downsample)
